@@ -18,6 +18,7 @@ using System.IO;
 using System.Text.Json;
 using System.Diagnostics;
 using System.Timers;
+using Path = System.IO.Path;
 
 namespace GoogRemind
 {
@@ -31,6 +32,9 @@ namespace GoogRemind
         public static MainWindow Instance;
         public Stopwatch Stopwatch;
 
+        static string AppDataString = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+        static string SavePath = Path.Combine(AppDataString, "GoogRemind", "UserReminders.json");
+
         public MainWindow()
         {
             Stopwatch = Stopwatch.StartNew();
@@ -42,7 +46,22 @@ namespace GoogRemind
 
             RemindersListView.ItemsSource = Reminders;
 
-            string jsonReminders = File.ReadAllText("UserReminders.json");
+            string jsonReminders = "";
+            try
+            {
+                jsonReminders = File.ReadAllText(SavePath);
+            }
+            catch (DirectoryNotFoundException ex)
+            {
+                Directory.CreateDirectory(Path.Combine(AppDataString, "GoogRemind"));
+            }
+            catch (FileNotFoundException ex)
+            {
+                var stream = File.Create(SavePath);
+                stream.Close();
+                jsonReminders = File.ReadAllText(SavePath);
+            }
+
             if (jsonReminders.Length > 0)
             {
                 IEnumerable<Reminder> loadedReminders = (IEnumerable<Reminder>)JsonSerializer.Deserialize(jsonReminders, typeof(IEnumerable<Reminder>));
@@ -83,7 +102,7 @@ namespace GoogRemind
 
         private void SaveReminders()
         {
-            File.WriteAllText("UserReminders.json", JsonSerializer.Serialize(Reminders));
+            File.WriteAllText(SavePath, JsonSerializer.Serialize(Reminders));
         }
 
         private void AddButton_Click(object sender, RoutedEventArgs e)
