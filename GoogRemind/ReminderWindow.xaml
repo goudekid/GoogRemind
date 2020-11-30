@@ -1,0 +1,15 @@
+﻿<Window x:Class="GoogRemind.ReminderWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:GoogRemind"
+        mc:Ignorable="d"
+        Title="ReminderWindow" Height="450" Width="800">
+    <Grid>
+		<Viewbox Margin="10" StretchDirection="DownOnly" Stretch="Uniform">
+			<TextBlock x:Name="textblock" HorizontalAlignment="Center" FontSize="5000" FontFamily="Comic Sans MS"/>
+		</Viewbox>
+
+	</Grid>
+</Window>
