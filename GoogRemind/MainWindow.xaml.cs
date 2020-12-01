@@ -19,6 +19,7 @@ using System.Text.Json;
 using System.Diagnostics;
 using System.Timers;
 using Path = System.IO.Path;
+using System.Media;
 
 namespace GoogRemind
 {
@@ -90,12 +91,13 @@ namespace GoogRemind
             {
                 if (reminder.TimeSpan < Stopwatch.Elapsed && !reminder.Triggered)
                 {
+                    SystemSounds.Beep.Play();
+                    reminder.Triggered = true;
                     Application.Current.Dispatcher.Invoke(() =>
                     {
                         ReminderWindow reminderWindow = new ReminderWindow(reminder.ReminderName);
                         reminderWindow.ShowDialog();
                     });
-                    reminder.Triggered = true;
                 }
             }
         }
@@ -146,6 +148,10 @@ namespace GoogRemind
             return;
         }
 
-
+        private void MarkTriggeredButton_Click(object sender, RoutedEventArgs e)
+        {
+            Reminder selected = (Reminder)RemindersListView.SelectedItem;
+            Reminders.First(it => it.ReminderName == selected.ReminderName).Triggered = true;
+        }
     }
 }
